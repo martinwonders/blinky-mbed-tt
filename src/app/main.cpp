@@ -12,39 +12,30 @@
 #include <scheduler.h>
 #include <mbed.h>
 
-void led1ToggleTask(void);
-void led2ToggleTask(void);
+/* Declare function prototypes */
 
-
-static DigitalOut red(LED_RED);
-static DigitalOut green(LED_GREEN);
-static DigitalOut led_app_red(D5);
-static DigitalOut led_app_green(D9);
+/* Declare varaibles for the LEDs etc */
 
 int main () {
-  red = 1;
-  green = 1;
-  led_app_red = 1;
-  led_app_green = 1;
+  /* Initialise the LEDs */
 
-  schInit();
-  schAddTask(led1ToggleTask, 0, 500);
-  schAddTask(led2ToggleTask, 500, 500);
+  /* Initialise the scheduler. Ensure TT_SCHED_TICK_HZ gives 1 ms between ticks */
 
+  /* Add tasks to the scheduler table */
 
-  schStart();
+  /* Start the scheduler */
   
   while (true) {
-    schDispatch();
+    /* Main application loop -- dispatch tasks */
   }
 }
 
 
 void led1ToggleTask(void) {
-  red = 1 - red;
+  /* Toggle the red LED on the K64F board */
 }
 
 void led2ToggleTask(void) {
-  led_app_green = 1 - led_app_green;
+  /* Toggle the green LED on the application board */
 }
 

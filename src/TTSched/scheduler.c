@@ -4,22 +4,20 @@
 #include <cmsis.h>
 #include <scheduler.h>
 
+/* Variables managed by the scheduler */
 static volatile uint32_t tickCount = 0;
 static schTCB_t schTasks[TT_SCHED_MAX_TASKS];
 
 void SysTick_Handler(void) {
-  tickCount += 1;
+  /* Increment tickCount */
 }
 
 void schInit(void) {   // initialise the scheduler
   
-  for (uint8_t i = 0; i < TT_SCHED_MAX_TASKS; i+=1) {
-    schTasks[i].task = (pVoidFunc_t)0;
-    schTasks[i].delay = 0;
-    schTasks[i].period = 0;
-  }
+  /* loop to set all TCBs in the task array to zeroes */
 }
 
+/* Here's the schAddTask function for free - nothing more to do here! */
 void schAddTask(               // add a task to the task set
   pVoidFunc_t task,              // the task to add
   uint32_t delay,                // the delay in ms
@@ -37,33 +35,37 @@ void schAddTask(               // add a task to the task set
 }
 
 void schStart(void) {           // start ticking
-  SysTick_Config((SystemCoreClock / TT_SCHED_TICK_HZ) - 1);
+  /* Configure the SysTick timer with the correct value 
+   * to achieve TT_SCHED_TICK_HZ ticks per second
+   */ 
 }
 
-void schDispatch(void) {          // update after a tick -- ISR
-  __disable_irq();
-  bool isUpdateNeeded = (tickCount > 0);
-  __enable_irq();
+void schDispatch(void) {        
 
-  while (isUpdateNeeded) {
-    for (uint8_t i = 0; i < TT_SCHED_MAX_TASKS; i+=1) {
-      if (schTasks[i].task) {
-        if (--schTasks[i].delay == 0) {
-          (*(schTasks[i].task))();
-          schTasks[i].delay = schTasks[i].period;
-        } 
-      }
-    }
-    __disable_irq();
-    tickCount -= 1;
-    isUpdateNeeded = (tickCount > 0);
-    __enable_irq();
-    /*assert(!isUpdateNeeded);*/
+  /* Check to see if we need to update the task array and run tasks 
+   * Don't forget to protect the tickCount variable by disabling interrupts
+   * while you check it. Enable interrupts again as soon as possible
+   */ 
+
+    /* Loop if update is needed */
+      /* Loop through task array
+       * if the TCB entry is populated
+       * decrement its delay field 
+       * if the delay field is now 0, run the task and
+       * reset the value of the delay field from the period
+       * end loop through task array
+       */
+    /* end loop if update is needed */
+
+    /* Decrement the tickCount variable to show that we have handled
+     * 1 tick. Check to see if we need to loop again through the task
+     * array. Make sure that your use of the tickCount variable is protected.
+     */ 
   }
-  schSleep();
+  /* Indicate that the microcontroller should enter low-power mode */
 }
 
 void schSleep(void) {         // go to sleep, if possible, to save power
-  __WFI();
+  /* single line of code needed here */
 }
 

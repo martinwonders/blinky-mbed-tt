@@ -61,7 +61,6 @@ void schDispatch(void) {
      * 1 tick. Check to see if we need to loop again through the task
      * array. Make sure that your use of the tickCount variable is protected.
      */ 
-  }
   /* Indicate that the microcontroller should enter low-power mode */
 }
 

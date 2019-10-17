@@ -6,7 +6,7 @@
 
 /* Variables managed by the scheduler */
 static volatile uint32_t tickCount = 0;
-static schTCB_t schTasks[TT_SCHED_MAX_TASKS];
+static TCB_t schTasks[TT_SCHED_MAX_TASKS];
 
 void SysTick_Handler(void) {
   /* Increment tickCount */
@@ -19,13 +19,13 @@ void schInit(void) {   // initialise the scheduler
 
 /* Here's the schAddTask function for free - nothing more to do here! */
 void schAddTask(               // add a task to the task set
-  pVoidFunc_t task,              // the task to add
+  task_t task,              // the task to add
   uint32_t delay,                // the delay in ms
   uint32_t period) {             // the period
   
   uint8_t i = 0;
   
-  while (i < TT_SCHED_MAX_TASKS && schTasks[i].task != (pVoidFunc_t)0) {
+  while (i < TT_SCHED_MAX_TASKS && schTasks[i].task != (task_t)0) {
     i += 1;
   }
   assert(i < TT_SCHED_MAX_TASKS);

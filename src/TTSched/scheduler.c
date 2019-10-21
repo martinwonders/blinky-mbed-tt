@@ -37,7 +37,7 @@ void schAddTask(               // add a task to the task set
   }
   assert(i < TT_SCHED_MAX_TASKS);
   schTasks[i].task = task;
-  schTasks[i].delay = delay + 1;
+  schTasks[i].delay = delay;
   schTasks[i].period = period;
 }
 
